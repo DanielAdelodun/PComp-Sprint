@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4884646158304744046}
+  - {fileID: 8441866777246223446}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1179488920998628461
@@ -48,7 +48,7 @@ MonoBehaviour:
   player: {fileID: 0}
   floorPrefab: {fileID: 623610362274280756, guid: 6b3bfd3ef33fb8c4ebd5634e5954b586, type: 3}
   floors: []
---- !u!1001 &7925719632509260290
+--- !u!1001 &6562842884928179258
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -105,8 +105,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b3bfd3ef33fb8c4ebd5634e5954b586, type: 3}
---- !u!4 &4884646158304744046 stripped
+--- !u!4 &8441866777246223446 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3329408957137993836, guid: 6b3bfd3ef33fb8c4ebd5634e5954b586, type: 3}
-  m_PrefabInstance: {fileID: 7925719632509260290}
+  m_PrefabInstance: {fileID: 6562842884928179258}
   m_PrefabAsset: {fileID: 0}

@@ -9,7 +9,7 @@ public class CameraControls : MonoBehaviour
 
     public float mouseSensitivity = 100f;
     
-    private float xRotation = 0f;
+    private float xRotation = 15f;
 
     void Start()
     {

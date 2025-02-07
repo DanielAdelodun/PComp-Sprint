@@ -28,7 +28,7 @@ public class EndlessFloor : MonoBehaviour
     }
 
     void clearPrevious() {
-        int lastFloor = (currentFloor + (totalFloors)) % totalFloors;
+        int lastFloor = (currentFloor + totalFloors) % totalFloors;
         if (floors[lastFloor] != null) {
             Destroy(floors[lastFloor], 0);
         }

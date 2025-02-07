@@ -36,7 +36,7 @@ public class PlayerManager : MonoBehaviour
     private void UpdateCameraPosition()
     {
         if (thirdPerson) {
-            Camera.main.transform.localPosition = new Vector3(0, 2.25f, -7.0f);
+           Camera.main.transform.localPosition = new Vector3(0, 3f, -3f);
         } else {
             Camera.main.transform.localPosition = new Vector3(0, 0.71f, 0.179f);
         }
