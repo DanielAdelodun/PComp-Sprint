@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using FirstGearGames.SmoothCameraShaker; // Make sure the camera shake library is correctly imported
 
 public class HealthSystem : MonoBehaviour
 {
@@ -16,7 +17,9 @@ public class HealthSystem : MonoBehaviour
         gameOverCanvas.SetActive(false); // Hide Game Over screen at start
     }
 
-    void OnTriggerEnter(Collider other)
+void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Obstacle")) // Ensure the obstacle has this tag
     {
         if (lives > 0)
         {
@@ -29,9 +32,25 @@ public class HealthSystem : MonoBehaviour
             }
         }
     }
+}
+void GameOver()
+{
+    Debug.Log("Game Over triggered! Attempting to show Game Over screen.");
 
-    void GameOver()
+    // Stop or fade out camera shake
+    CameraShakerHandler.FadeOutAll(0.5f); // Smoothly stops shake
+
+    if (gameOverCanvas == null)
     {
-        gameOverCanvas.SetActive(true); // Show Game Over screen
+        Debug.LogError("Game Over Canvas is NOT assigned in the Inspector!");
+        return;
     }
+
+    gameOverCanvas.SetActive(true); // Activate Game Over screen
+
+    if (!gameOverCanvas.activeSelf)
+    {
+        Debug.LogError("Game Over Canvas is still inactive after SetActive(true)! Something is overriding it.");
+    }
+}
 }
