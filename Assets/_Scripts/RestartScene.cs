@@ -3,13 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class SceneReloader : MonoBehaviour
 {
+    private bool canReload = false; // Prevent reloading during gameplay
+
     void Update()
     {
-        // Check if the R key is pressed
-        if (Input.GetKeyDown(KeyCode.R))
+        if (canReload && Input.GetKeyDown(KeyCode.R))
         {
-            // Reload the active scene
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+    }
+
+    // Call this method from GameOver() in HealthSystem
+    public void EnableReload()
+    {
+        canReload = true;
     }
 }

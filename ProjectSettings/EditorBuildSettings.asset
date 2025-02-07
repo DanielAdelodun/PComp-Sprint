@@ -5,16 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/InitialScene.unity
     guid: 28fb2d18a9bcad8498de96ebcf7c7953
   - enabled: 1
     path: Assets/Scenes/ObstacleScene.unity
     guid: 424062ebc1e1e1546887c9e58b1f79fd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GaryOh.unity
     guid: 4d18899fa0af2400d82702c8e3043567
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TargetScene.unity
     guid: 40f92c155564f50488de96a5bd5e690e
   m_configObjects: {}
