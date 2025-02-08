@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IMUController : MonoBehaviour
+public class HatController : MonoBehaviour
 {
+
+    public float movementSpeed = 5f;
     private float initXPos;
     private float initYPos;
     private float initZPos;
-    private float tiltToTranslateScaleFactor = -0.2f;
+    [SerializeField] private float tiltMovementSpeed = -0.1f;
     [SerializeField] private Quaternion initialOrientation;
     [SerializeField] private Quaternion orientationRaw;
     [SerializeField] private Quaternion calibratedOrientation;   // Relative to Initial
@@ -27,6 +29,7 @@ public class IMUController : MonoBehaviour
         float Qy = Input.GetAxisRaw("Qy");
         float Qz = Input.GetAxisRaw("Qz");
         initialOrientation.Set(Qx, -Qy, -Qz, Qw);
+        //initialOrientation.Set(0, 0, 0, 1);
     }
 
     void Update()
@@ -52,13 +55,18 @@ public class IMUController : MonoBehaviour
         if (zRotation > 180) {
             zRotation -= 360;
         }
-        float xTranslation = zRotation * tiltToTranslateScaleFactor;
+        float xTranslation = zRotation * tiltMovementSpeed;
 
         float nextXPos = initXPos + xTranslation;
         float currentYPos = transform.position.y;
         float currentZPos = transform.position.z;
 
-        Vector3 newPosition = new Vector3(nextXPos, currentYPos, currentZPos);
+        // Move Forward At Set Velocity
+
+        float nextZPos = currentZPos + movementSpeed * Time.deltaTime;
+
+
+        Vector3 newPosition = new Vector3(nextXPos, currentYPos, nextZPos);
         transform.position = newPosition;
     }
 }
