@@ -97,6 +97,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6216630744612151560, guid: 6d58392d0b7c5a44a82040de4cdf5f68, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6522480445163838556, guid: 6d58392d0b7c5a44a82040de4cdf5f68, type: 3}
       propertyPath: m_Name
       value: stump-possesed
@@ -119,6 +123,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6561842067294770266}
     m_Modifications:
+    - target: {fileID: 1316080262027410297, guid: 0c2f1fb509b67014bbd7626f123123d4, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1569805169333804177, guid: 0c2f1fb509b67014bbd7626f123123d4, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.7

@@ -43,15 +43,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3670595811079770739, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
       propertyPath: m_LocalScale.x
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3670595811079770739, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
       propertyPath: m_LocalScale.y
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3670595811079770739, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
       propertyPath: m_LocalScale.z
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3670595811079770739, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
       propertyPath: m_LocalPosition.x
@@ -97,6 +97,14 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3853438663133181316, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3853438663133181317, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4159993300826327241, guid: 5f7dbd80b21547d4b858ab33922e2740, type: 3}
       propertyPath: m_Name
       value: coffin-old
@@ -121,15 +129,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2451325533797763712, guid: 5427496dc43752d44916ff576bef363b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2451325533797763712, guid: 5427496dc43752d44916ff576bef363b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2451325533797763712, guid: 5427496dc43752d44916ff576bef363b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2451325533797763712, guid: 5427496dc43752d44916ff576bef363b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -179,6 +187,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: boy-ghost-halloween
       objectReference: {fileID: 0}
+    - target: {fileID: 7031373248990531921, guid: 5427496dc43752d44916ff576bef363b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8423129063037702394, guid: 5427496dc43752d44916ff576bef363b, type: 3}
       propertyPath: m_Avatar
       value: 
@@ -187,13 +199,17 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8423129063037702394, guid: 5427496dc43752d44916ff576bef363b, type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2976610219438379066, guid: 5427496dc43752d44916ff576bef363b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2746259577238153692}
+      addedObject: {fileID: 8548974086368452721}
   m_SourcePrefab: {fileID: 100100000, guid: 5427496dc43752d44916ff576bef363b, type: 3}
 --- !u!4 &5009530151540923295 stripped
 Transform:
@@ -205,18 +221,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2976610219438379066, guid: 5427496dc43752d44916ff576bef363b, type: 3}
   m_PrefabInstance: {fileID: 7458443343201620255}
   m_PrefabAsset: {fileID: 0}
---- !u!111 &2746259577238153692
-Animation:
+--- !u!65 &8548974086368452721
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5678684593658839333}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 3963595363326709879, guid: 12ba5aee93c9c4a36bbd2ef9c52f746e, type: 3}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Size: {x: 0.6, y: 1.9633478, z: 0.41}
+  m_Center: {x: 0, y: 0.48167276, z: 0}
