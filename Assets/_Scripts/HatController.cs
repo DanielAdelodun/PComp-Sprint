@@ -41,7 +41,7 @@ public class HatController : MonoBehaviour
         float Qz = Input.GetAxis("Qz");
         orientationRaw = new Quaternion(Qx, -Qy, -Qz, Qw);
 
-        // Spherical Difference 
+        // Orientation Relative To Inital
         calibratedOrientation = orientationRaw * Quaternion.Inverse(initialOrientation);
 
         // Euler Z Rotation (Left-Right Head Tilt) --> X (Side-to-Side) Movement
