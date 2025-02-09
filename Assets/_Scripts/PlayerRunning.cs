@@ -4,22 +4,22 @@ using UnityEngine;
 
 // Enemy Will Start enemyDistance From Player
 // They Need To Catch Up 1/3 * enemyDistance Every Crash
-// Crash Lasts 3 Seconds
 
-// Decrease Velocity By 1/3 * 1/3 * enemyDistance
+// When You Crash, You Want To End Up 1/3 * enemyDistance Closer To Enemy
+// => Velocity -= 1/collisionTimeTotal * 1/3 * enemyDistance
 
-public class StartRunning : MonoBehaviour
+public class PlayerRunning : MonoBehaviour
 {
+    [SerializeField] private float startSpeed = 10.0f;
     [SerializeField] private float movementSpeed = 0f;
-    [SerializeField] private Animation animationComponent;
-    [SerializeField] private string runAnimationName = "Running_A (1)";
-    [SerializeField] private Transform playerTransform;
-    private bool cameraTranstionRunning = false;
-    private float cameraTransitionElapsed = 0.0f;
-    private Camera currentCamera;    
-    private Camera targetCamera;
-    private float enemyDistance = 10.0f;
-    [SerializeField] private float collisions = 0;
+    [SerializeField] float currentSpeed;
+    [SerializeField] float speedReduction;
+    [SerializeField] float minimumSpeed = 0.1f;
+    [SerializeField] private float enemyDistance = 10.0f;
+    [SerializeField] private float collisionTimeLeft = 0.0f;
+    [SerializeField] private float collisionTimeTotal = 0.5f;
+    private Animation animationComponent;
+    private string runAnimationName = "Running_A (1)";
 
     void Start()
     {
@@ -31,48 +31,39 @@ public class StartRunning : MonoBehaviour
     {
 
         // Slow Down Player If Crashed
-        float speedReduction;
-        if (collisions <= 0) {
-            collisions = 0;
+        if (collisionTimeLeft <= 0) {
+            collisionTimeLeft = 0;
             speedReduction = 0;
         } else {
-            collisions -= Time.deltaTime;
-            speedReduction = enemyDistance / 3;
+            collisionTimeLeft -= Time.deltaTime;
+            speedReduction = (1.0f / collisionTimeTotal) * enemyDistance * (1.0f / 3.0f);
         }
 
-        // Run Forward At Current Set Speed
+        // Make Sure We Don't Start Moving Backwards
+        currentSpeed = (movementSpeed - speedReduction);
+        currentSpeed = Mathf.Clamp(currentSpeed, minimumSpeed, movementSpeed);
+
+        // Save Current Position
         float currentXPos = transform.position.x;
         float currentYPos = transform.position.y;
         float currentZPos = transform.position.z;
         
-        float nextZPos = currentZPos + (movementSpeed - speedReduction) * Time.deltaTime;
-
+        // Move Forward. Our Velocity is `movementSpeed - speedReduction` (Clamped).
+        float nextZPos = currentZPos + currentSpeed * Time.deltaTime;
         Vector3 newPosition = new Vector3(currentXPos, currentYPos, nextZPos);
         transform.position = newPosition;
-
-        if (cameraTranstionRunning) {
-            if (cameraTransitionElapsed >= 1) {
-                cameraTranstionRunning = false;
-            }
-            // Rotate From startCameraAngle To 0
-            // Look At Character 
-        }
     }
 
     public void StartPlayerRun() {
         // Start Running Animation
         animationComponent.Play(runAnimationName);
 
-        // Start Camera Transition
-        cameraTranstionRunning = true;
-
         // Give Initial Speed
-        movementSpeed = 5.0f;
+        movementSpeed = startSpeed;
     }
     void OnTriggerEnter(Collider other)
     {
-        collisions += 1.5f;
+        collisionTimeLeft += collisionTimeTotal;
         Debug.Log("Collided");
-        Debug.Log(collisions);
     }
 }
