@@ -17,8 +17,8 @@ MonoBehaviour:
   _shakeCanvases: 0
   _shakeObjects: 0
   _iterationPercent: 1
-  _unlimitedDuration: 1
-  _totalDuration: 4
+  _unlimitedDuration: 0
+  _totalDuration: 1
   _fadeInDuration: 0.1
   _fadeOutDuration: 0.1
   _magnitude: 1

@@ -12,12 +12,20 @@ public class GameOverManager : MonoBehaviour
     public AudioSource gameMusic;       // Assign the AudioSource that plays the music
 
     private bool isGameOver = false;
+    private SceneReloader sceneReloader;
 
     void Start()
     {
         // Hide Game Over UI at the start
         if (gameOverCanvas != null)
             gameOverCanvas.SetActive(false);
+
+        // Find SceneReloader in the scene
+        sceneReloader = FindObjectOfType<SceneReloader>();
+        if (sceneReloader == null)
+        {
+            Debug.LogError("⚠ SceneReloader script is missing! Make sure it is attached to an active GameObject.");
+        }
     }
 
     public void TriggerGameOver()
@@ -33,10 +41,6 @@ public class GameOverManager : MonoBehaviour
             gameMusic.Stop();
             Debug.Log("🎵 Music stopped!");
         }
-        else
-        {
-            Debug.LogWarning("⚠ No AudioSource assigned for game music!");
-        }
 
         // **Disable the entire rhythmsound GameObject**
         if (rhythmsound != null)
@@ -44,28 +48,22 @@ public class GameOverManager : MonoBehaviour
             rhythmsound.SetActive(false);
             Debug.Log("🔇 rhythmsound GameObject Disabled!");
         }
-        else
-        {
-            Debug.LogWarning("⚠ rhythmsound GameObject is not assigned!");
-        }
 
         // **Stop Player and Enemy Movement**
-        if (hatController != null)
-        {
-            hatController.enabled = false; // Disable movement
-            Debug.Log("🚫 HatController disabled. Player movement stopped.");
-        }
-        if (enemyFollow != null)
-        {
-            enemyFollow.enabled = false; // Disable enemy movement
-            Debug.Log("🚫 EnemyFollow disabled. Enemy movement stopped.");
-        }
+        if (hatController != null) hatController.enabled = false;
+        if (enemyFollow != null) enemyFollow.enabled = false;
 
         // **Show Game Over screen**
-        if (gameOverCanvas != null)
+        if (gameOverCanvas != null) gameOverCanvas.SetActive(true);
+
+        // **Enable Scene Reload**
+        if (sceneReloader != null)
         {
-            gameOverCanvas.SetActive(true);
-            Debug.Log("💀 Game Over Canvas shown.");
+            sceneReloader.EnableReload();
+        }
+        else
+        {
+            Debug.LogError("⚠ SceneReloader not found. Restart will not work!");
         }
     }
 }

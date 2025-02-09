@@ -46,6 +46,12 @@ namespace FirstGearGames.SmoothCameraShaker
         /// <summary>
         /// True to shake cameras.
         /// </summary>
+        
+        public void SetTotalDuration(float value)
+{
+    ValidateTotalDuration(value, true);
+}
+
         public bool ShakeCameras
         {
             get { return _shakeCameras; }
@@ -443,13 +449,6 @@ namespace FirstGearGames.SmoothCameraShaker
         /// Sets a new TotalDuration value. Setting this value to 0 or greater removes unlimited duration; just as setting it to less than 0 sets unlimited duration.
         /// </summary>
         /// <param name="value">New total duration. Using values 0f and lower will make duration unlimited.</param>
-        public void SetTotalDuration(float value)
-        {
-            if (!InstancedWithDebug())
-                return;
-            ValidateTotalDuration(value, true);
-        }
-
         /// <summary>
         /// Sets a new ShakeCameras value.
         /// </summary>
