@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class HatController : MonoBehaviour
 {
-
+    private bool startedRunning = false;
+    private bool gameOver = false;
     private float initXPos;
     private float initYPos;
     private float initZPos;
-    private bool startedRunning = false;
     [SerializeField] private float tiltMovementSpeed = -0.15f;
     [SerializeField] private Quaternion initialOrientation;
     [SerializeField] private Quaternion orientationRaw;
@@ -32,7 +32,7 @@ public class HatController : MonoBehaviour
 
     void Update()
     {
-        if (!startedRunning) return;
+        if (!startedRunning || gameOver) return;
 
         // Get Raw Values From The HID Gamepad For Orientation
         float Qw = Input.GetAxis("Qw");
@@ -72,6 +72,10 @@ public class HatController : MonoBehaviour
 
     public void StartRunning(){
         startedRunning = true;
+    }
+
+    public void GameOver() {
+        gameOver = true; 
     }
 }
 

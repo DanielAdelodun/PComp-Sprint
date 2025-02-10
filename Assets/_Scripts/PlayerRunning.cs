@@ -10,6 +10,12 @@ using UnityEngine;
 
 public class PlayerRunning : MonoBehaviour
 {
+    // TODO Get These From Game Manager?...
+    private bool startedRunning = false;
+    private bool gameOver = false;
+    [SerializeField] private uint totalLives = 5;
+    [SerializeField] private uint livesLeft = 5;
+    // ... Game Manager? 
     [SerializeField] private float startSpeed = 10.0f;
     [SerializeField] private float movementSpeed = 0f;
     [SerializeField] float currentSpeed;
@@ -20,6 +26,7 @@ public class PlayerRunning : MonoBehaviour
     [SerializeField] private float collisionTimeTotal = 0.5f;
     private Animation animationComponent;
     private string runAnimationName = "Running_A (1)";
+    [SerializeField] private Lives livesManager;
 
     void Start()
     {
@@ -29,6 +36,7 @@ public class PlayerRunning : MonoBehaviour
 
     void Update()
     {
+        if (!startedRunning || gameOver) return;
 
         // Slow Down Player If Crashed
         if (collisionTimeLeft <= 0) {
@@ -36,7 +44,7 @@ public class PlayerRunning : MonoBehaviour
             speedReduction = 0;
         } else {
             collisionTimeLeft -= Time.deltaTime;
-            speedReduction = (1.0f / collisionTimeTotal) * enemyDistance * (1.0f / 3.0f);
+            speedReduction = (1.0f / collisionTimeTotal) * enemyDistance * (1.0f / totalLives);
         }
 
         // Make Sure We Don't Start Moving Backwards
@@ -60,10 +68,25 @@ public class PlayerRunning : MonoBehaviour
 
         // Give Initial Speed
         movementSpeed = startSpeed;
+
+        // Start
+        startedRunning = true;
     }
     void OnTriggerEnter(Collider other)
     {
+        // Call LifeLost From The Mananger
+        livesManager.LifeLost();
+
+        // Game Over If No Lives Left (TODO - External Call From GameManager?)
+        if (livesLeft <= 0) {
+            GameOver();
+        }
+
+        // Slow Down For Set Time
         collisionTimeLeft += collisionTimeTotal;
-        Debug.Log("Collided");
+    }
+
+    public void GameOver() {
+        gameOver = true;
     }
 }
