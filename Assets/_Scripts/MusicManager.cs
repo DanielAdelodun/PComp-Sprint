@@ -18,11 +18,23 @@ public class MusicManager : MonoBehaviour
         if (successCanvas != null)
             successCanvas.SetActive(false);
 
-        // Ensure the AudioSource is assigned and start listening for music end
+        // **Check if the Audio Source is assigned**
         if (gameMusic != null)
         {
+            if (!gameMusic.gameObject.activeSelf)  
+            {
+                gameMusic.gameObject.SetActive(true);  // Enable the Audio Source GameObject
+            }
+
             gameMusic.Play();
-            Invoke("CheckForMusicEnd", gameMusic.clip.length); // Schedule success trigger
+            if (gameMusic.clip != null)  // **Ensure there's a valid audio clip**
+            {
+                Invoke("CheckForMusicEnd", gameMusic.clip.length); // Schedule success trigger
+            }
+            else
+            {
+                Debug.LogWarning("⚠ gameMusic has no audio clip assigned!");
+            }
         }
         else
         {

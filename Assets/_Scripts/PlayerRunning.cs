@@ -28,11 +28,20 @@ public class PlayerRunning : MonoBehaviour
     private string runAnimationName = "Running_A (1)";
     [SerializeField] private Lives livesManager;
 
-    void Start()
+  void Start()
+{
+    animationComponent = GetComponent<Animation>();
+    
+    if (livesManager == null)
     {
-        animationComponent = GetComponent<Animation>();
-        // StartPlayerRun();
+        livesManager = FindObjectOfType<Lives>(); // 🔍 Find the Lives script in the scene
+        if (livesManager == null)
+        {
+            Debug.LogError("❌ Lives Manager is NULL! Make sure it's assigned in the Inspector.");
+        }
     }
+}
+
 
     void Update()
     {
