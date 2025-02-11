@@ -2,38 +2,61 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [Header("Player Settings")]
-    public Transform player; // Reference to the player transform
+    public Transform player;
+    private Vector3 targetPosition;
+    private bool gameOver = false;
+    private bool startedRunning = false;
 
-    [Header("Camera Settings")]
-    public float smoothSpeed = 0.125f; // Smoothness of camera movement
-    public Vector2 minBounds; // Minimum bounds (bottom-left corner)
-    public Vector2 maxBounds; // Maximum bounds (top-right corner)
+    [SerializeField] private Vector3 startCameraOffset;
+    [SerializeField] private Vector3 runningCameraOffset;
+    [SerializeField] private Vector3 startCameraRotation;
+    [SerializeField] private Vector3 runningCameraRotation;
+    [SerializeField] private float cameraTransitionTimeTotal = 2.0f;
+    private float cameraTransitionTimeLeft;
+    
 
-    private Vector3 targetPosition; // Desired camera position
+    void Start()
+    {
+        startCameraOffset = new Vector3(-2.5f, 2.0f, 6.0f);
+        runningCameraOffset = new Vector3(0.0f, 4.0f, -10.0f);
+        startCameraRotation = new Vector3(2.0f, -200.0f, 0.0f);
+        runningCameraRotation = new Vector3(15.0f, 0.0f, 0.0f);
+        cameraTransitionTimeLeft = cameraTransitionTimeTotal;
+    }
 
     void LateUpdate()
     {
-        if (player != null)
+        if (player != null && !gameOver && startedRunning && cameraTransitionTimeLeft <= 0)  // We Are Running
         {
-            // Calculate target position based on the player position
-            targetPosition = new Vector3(player.position.x, transform.position.y, transform.position.z);
+            targetPosition = new Vector3(player.position.x, player.position.y, player.position.z);
+            targetPosition += runningCameraOffset;
 
-            // Clamp the target position to the level bounds
-            targetPosition.x = Mathf.Clamp(targetPosition.x, minBounds.x, maxBounds.x);
+            transform.position = targetPosition;
 
-            // Smoothly move the camera to the target position
-            transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
+            transform.rotation = Quaternion.Euler(runningCameraRotation);
+
+        } else if (player != null && !gameOver && !startedRunning)             // Just Started Game
+        {
+            targetPosition = new Vector3(player.position.x, player.position.y, player.position.z);
+            targetPosition += startCameraOffset;
+            transform.position = targetPosition;
+
+            transform.rotation = Quaternion.Euler(startCameraRotation);
+        } else if (player != null && !gameOver && startedRunning && cameraTransitionTimeLeft > 0) {
+            cameraTransitionTimeLeft -= Time.deltaTime;
+            float t = 1 - (cameraTransitionTimeLeft / cameraTransitionTimeTotal);
+            transform.position = player.position + Vector3.Lerp(startCameraOffset, runningCameraOffset, t);
+            transform.rotation = Quaternion.Euler(Vector3.Lerp(startCameraRotation, runningCameraRotation, t));
         }
     }
 
-    void OnDrawGizmosSelected()
+    public void GameOver()
     {
-        // Visualise the camera bounds in the Scene view
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(minBounds.x, minBounds.y, 0), new Vector3(maxBounds.x, minBounds.y, 0));
-        Gizmos.DrawLine(new Vector3(minBounds.x, maxBounds.y, 0), new Vector3(maxBounds.x, maxBounds.y, 0));
-        Gizmos.DrawLine(new Vector3(minBounds.x, minBounds.y, 0), new Vector3(minBounds.x, maxBounds.y, 0));
-        Gizmos.DrawLine(new Vector3(maxBounds.x, minBounds.y, 0), new Vector3(maxBounds.x, maxBounds.y, 0));
+        gameOver = true;
+    }
+
+    public void StartRunning()
+    {
+        startedRunning = true;
     }
 }
