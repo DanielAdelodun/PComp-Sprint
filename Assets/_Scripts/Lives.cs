@@ -7,20 +7,38 @@ public class Lives : MonoBehaviour
 {
     [SerializeField] private bool startedRunning = false;
     [SerializeField] private bool gameOver = false;
-    [SerializeField] private uint totalLives = 5;
+    [SerializeField] private uint totalLives = 3;
     [SerializeField] private uint remainingLives; // >0 To Prevent Immediate GameOver
     [SerializeField] private float gameStartTime;
     [SerializeField] private float gameEndTime;
     [SerializeField] private float timeDelta;
+    [SerializeField] private float damageCooldownTime = 0.2f;
+    private float damageCooldownRemaining = 0.0f;
     [SerializeField] string totalTime;
     public TMP_Text timerDisplayCorner;
     public TMP_Text timerDisplayCenter;
-    public TMP_Text livesDisplay; // TODO Remove + Replace
     public PlayerRunning playerRunning;
     public HatController hatController;
+
+    public MeshRenderer heartOne;
+    public MeshRenderer heartTwo;
+    public MeshRenderer heartThree;
+    private MeshRenderer[] hearts;
+
+    public CameraFollow cameraFollow;
     
     void Start()
     {
+        remainingLives = totalLives;
+        timerDisplayCenter.gameObject.SetActive(false);
+        timerDisplayCorner.gameObject.SetActive(true);
+
+        hearts = new MeshRenderer[] {heartOne, heartTwo, heartThree};
+        
+        // Hide All Hearts
+        foreach (MeshRenderer heart in hearts) {
+            heart.enabled = false;
+        }
     }
 
     void Update()
@@ -30,11 +48,24 @@ public class Lives : MonoBehaviour
 
         // Show Time Spent Running
         if (startedRunning && !gameOver) timerDisplayCorner.text = FormatTime(Time.time - gameStartTime);
+
+        // Update Damage Cooldown
+        if (damageCooldownRemaining > 0) damageCooldownRemaining -= Time.deltaTime;
     }
 
     public void LifeLost() {
-        if (!gameOver) remainingLives -= 1;
-        livesDisplay.text = remainingLives.ToString();
+        if (!gameOver && damageCooldownRemaining <= 0) {
+
+            // Reset Damage Cooldown
+            damageCooldownRemaining = damageCooldownTime;
+
+            // Lose Life
+            remainingLives -= 1;
+
+            // Hide Heart
+            Debug.Log(remainingLives);
+            hearts[remainingLives].enabled = false;
+        }
     }
 
     void GameOver() {
@@ -53,6 +84,7 @@ public class Lives : MonoBehaviour
         // Call Relevant Functions
         playerRunning.GameOver();
         hatController.GameOver();
+        cameraFollow.GameOver();
     }
 
     public void StartRunning() {
@@ -60,12 +92,18 @@ public class Lives : MonoBehaviour
 
         remainingLives = totalLives;
 
+        // Show All Hearts
+        foreach (MeshRenderer heart in hearts) {
+            heart.enabled = true;
+        }
+
         // Remember Current Time
         gameStartTime = Time.time;
 
         // Call Relevant Functions
         playerRunning.StartPlayerRun();
         hatController.StartRunning();
+        cameraFollow.StartRunning();
     }
     public static string FormatTime(float totalSeconds)
     {
