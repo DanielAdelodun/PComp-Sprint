@@ -3,45 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Enemy Will Start enemyDistance From Player
-// They Need To Catch Up 1/3 * enemyDistance Every Crash
+// They Need To Catch Up 1/totalLives * enemyDistance Every Crash
 
-// When You Crash, You Want To End Up 1/3 * enemyDistance Closer To Enemy
-// => Velocity -= 1/collisionTimeTotal * 1/3 * enemyDistance
+// When You Crash, You Want To End Up 1/totalLives * enemyDistance Closer To Enemy
+// => Velocity -= 1/collisionTimeTotal * 1/totalLives * enemyDistance
 
 public class PlayerRunning : MonoBehaviour
 {
     // TODO Get These From Game Manager?...
-    private bool startedRunning = false;
-    private bool gameOver = false;
-    [SerializeField] private uint totalLives = 5;
-    [SerializeField] private uint livesLeft = 5;
-    // ... Game Manager? 
-    [SerializeField] private float startSpeed = 10.0f;
-    [SerializeField] private float movementSpeed = 0f;
-    [SerializeField] float currentSpeed;
+    private bool startedRunning;
+    private bool gameOver;
+    [SerializeField] private float startSpeed;
+    [SerializeField] private float movementSpeed;
     [SerializeField] float speedReduction;
-    [SerializeField] float minimumSpeed = 0.1f;
-    [SerializeField] private float enemyDistance = 10.0f;
-    [SerializeField] private float collisionTimeLeft = 0.0f;
-    [SerializeField] private float collisionTimeTotal = 0.5f;
+    [SerializeField] float currentSpeed;
+    [SerializeField] float minimumSpeed;
+    [SerializeField] private float enemyDistance;
+    [SerializeField] private float collisionTimeLeft;
+    [SerializeField] private float collisionTimeTotal;
     private Animation animationComponent;
-    private string runAnimationName = "Running_A (1)";
-    [SerializeField] private Lives livesManager;
+    private string runAnimationName;
+    [SerializeField] private HealthManager livesManager;
 
-  void Start()
-{
-    animationComponent = GetComponent<Animation>();
-    
-    if (livesManager == null)
+    void Start()
     {
-        livesManager = FindObjectOfType<Lives>(); // 🔍 Find the Lives script in the scene
-        if (livesManager == null)
-        {
-            Debug.LogError("❌ Lives Manager is NULL! Make sure it's assigned in the Inspector.");
-        }
+        startedRunning = false;
+        gameOver = false;
+        startSpeed = 10.0f;
+        movementSpeed = 0f;
+        minimumSpeed = 0.1f;
+        enemyDistance = 10.0f;
+        collisionTimeLeft = 0.0f;
+        collisionTimeTotal = 0.5f;
+        animationComponent = GetComponent<Animation>();
+        runAnimationName = "Running_A (1)";
     }
-}
-
 
     void Update()
     {
@@ -53,7 +49,7 @@ public class PlayerRunning : MonoBehaviour
             speedReduction = 0;
         } else {
             collisionTimeLeft -= Time.deltaTime;
-            speedReduction = (1.0f / collisionTimeTotal) * enemyDistance * (1.0f / totalLives);
+            speedReduction = (1.0f / collisionTimeTotal) * enemyDistance * (1.0f / livesManager.totalLives);
         }
 
         // Make Sure We Don't Start Moving Backwards
@@ -83,13 +79,8 @@ public class PlayerRunning : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        // Call LifeLost From The Mananger
+        // Lose Life
         livesManager.LifeLost();
-
-        // Game Over If No Lives Left (TODO - External Call From GameManager?)
-        if (livesLeft <= 0) {
-            GameOver();
-        }
 
         // Slow Down For Set Time
         collisionTimeLeft += collisionTimeTotal;
