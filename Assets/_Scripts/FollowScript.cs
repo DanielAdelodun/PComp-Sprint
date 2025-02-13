@@ -1,21 +1,24 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyFollow : MonoBehaviour
 {
-    public Transform player; // Reference to the Player
-    public float speed = 10f; // Enemy movement speed
-    public float rotationSpeed = 5f; // Enemy rotation speed
-    public float knockbackSpeed = 15f; // Speed of the knockback
+    public Transform player;
+    public float speed = 10f;
+    public float rotationSpeed = 5f;
+    public float knockbackSpeed = 15f;
+    public Button startEnemyButton;
 
     [Header("Camera Settings")]
-    public Camera mainCamera; // Assign Main Camera
-    public Camera gameOverCam; // Assign Game Over Camera
+    public Camera mainCamera;
+    public Camera gameOverCam;
 
     private Transform playerTransform;
-    private float groundY; // Stores the Y-position to keep enemy on the ground
-    private GameOverManager gameOverManager; // Reference to GameOverManager
-    private CharacterController characterController; // Reference to CharacterController
+    private float groundY;
+    private GameOverManager gameOverManager;
+    private CharacterController characterController;
+    public UIManager uiManager; // Reference to UIManager
 
     void Start()
     {
@@ -24,7 +27,6 @@ public class EnemyFollow : MonoBehaviour
             playerTransform = player.transform;
             characterController = player.GetComponent<CharacterController>();
 
-            // Ensure CharacterController is disabled at the beginning
             if (characterController != null)
             {
                 characterController.enabled = false;
@@ -32,40 +34,44 @@ public class EnemyFollow : MonoBehaviour
             }
         }
 
-        // Store the initial Y position to keep enemy grounded
         groundY = transform.position.y;
 
-        // Find the GameOverManager in the scene
         gameOverManager = FindObjectOfType<GameOverManager>();
         if (gameOverManager == null)
         {
             Debug.LogError("⚠ GameOverManager not found! Assign it to the scene.");
         }
 
-        // Ensure Game Over Camera is disabled at start
         if (gameOverCam != null)
         {
             gameOverCam.gameObject.SetActive(false);
         }
+
+        if (startEnemyButton != null)
+        {
+            startEnemyButton.onClick.AddListener(StartEnemyMovement);
+        }
+        else
+        {
+            Debug.LogWarning("⚠ Start Enemy Button is not assigned in the Inspector.");
+        }
+
+        this.enabled = false;
     }
 
     void Update()
     {
         if (playerTransform != null)
         {
-            FollowPlayer(); // Enemy always follows player but stays on the ground
+            FollowPlayer();
         }
     }
 
     void FollowPlayer()
     {
-        // Keep the enemy on the ground by ignoring the player's Y position
         Vector3 targetPosition = new Vector3(playerTransform.position.x, groundY, playerTransform.position.z);
-        
-        // Move towards the target position but keep Y constant
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        // Rotate smoothly to face the player
         Vector3 direction = (targetPosition - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
@@ -77,19 +83,29 @@ public class EnemyFollow : MonoBehaviour
         {
             Debug.Log("🔥 Enemy hit the player! Enabling CharacterController...");
 
-            // **Enable Character Controller if it was disabled**
             if (characterController != null && !characterController.enabled)
             {
                 StartCoroutine(EnableCharacterControllerWithDelay());
             }
 
             StartCoroutine(KnockbackAndGameOver(other.transform));
+
+            // **Trigger UIManager to show GameOver screen**
+            if (uiManager != null)
+            {
+                uiManager.GameOver();
+                Debug.Log("🕒 UIManager triggered GameOver Timer.");
+            }
+            else
+            {
+                Debug.LogError("⚠ UIManager not assigned in EnemyFollow!");
+            }
         }
     }
 
     IEnumerator EnableCharacterControllerWithDelay()
     {
-        yield return new WaitForEndOfFrame(); // **Wait for physics update**
+        yield return new WaitForEndOfFrame();
         characterController.enabled = true;
         Debug.Log("✅ CharacterController ENABLED after delay!");
     }
@@ -97,42 +113,37 @@ public class EnemyFollow : MonoBehaviour
     IEnumerator KnockbackAndGameOver(Transform player)
     {
         Debug.Log("🚀 Switching to Game Over Camera...");
-        
-        // **Switch to Game Over Camera**
+
         if (gameOverCam != null && mainCamera != null)
         {
             mainCamera.gameObject.SetActive(false);
             gameOverCam.gameObject.SetActive(true);
         }
 
-        // Knockback direction should only affect the player
         Vector3 knockbackDirection = (player.position - transform.position).normalized;
-        float horizontalForce = 30f; // Strong push
-        float verticalForce = 50f; // Strong upward push
+        float horizontalForce = 30f;
+        float verticalForce = 50f;
 
         float elapsedTime = 0f;
-        float knockbackDuration = 0.5f; // Duration of knockback effect
+        float knockbackDuration = 0.5f;
 
-        while (elapsedTime < knockbackDuration) 
+        while (elapsedTime < knockbackDuration)
         {
             if (characterController != null && characterController.enabled)
             {
-                // **Use CharacterController.Move() instead of transform.position**
                 characterController.Move((knockbackDirection * horizontalForce + Vector3.up * verticalForce) * Time.deltaTime);
             }
             else
             {
-                // **If CharacterController is disabled, use transform movement**
                 player.position += (knockbackDirection * horizontalForce + Vector3.up * verticalForce) * Time.deltaTime;
             }
-            
+
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         Debug.Log("💀 Knockback finished! Triggering Game Over...");
 
-        // **Trigger Game Over after knockback completes**
         if (gameOverManager != null)
         {
             gameOverManager.TriggerGameOver();
@@ -141,5 +152,11 @@ public class EnemyFollow : MonoBehaviour
         {
             Debug.LogError("⚠ gameOverManager is NULL! Assign it in the scene.");
         }
+    }
+
+    public void StartEnemyMovement()
+    {
+        Debug.Log("⚡ EnemyFollow script ENABLED!");
+        this.enabled = true;
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -19,39 +17,36 @@ public class UIManager : MonoBehaviour
         startedRunning = false;
         gameOver = false;
 
-        // Hide Center Timer, Show Corner Timer
         timerDisplayCenter.gameObject.SetActive(false);
         timerDisplayCorner.gameObject.SetActive(true);
     }
 
     void Update()
     {
-        // Update Corner Timer
-        if (startedRunning && !gameOver) timerDisplayCorner.text = FormatTime(Time.time - runStartTime);
+        if (startedRunning && !gameOver)
+            timerDisplayCorner.text = FormatTime(Time.time - runStartTime);
     }
 
-    public void StartRunning() {
+    public void StartRunning()
+    {
         startedRunning = true;
-
-        // Remember Start Time
         runStartTime = Time.time;
     }
 
-    public void GameOver() {
+    public void GameOver()
+    {
+        if (gameOver) return;
         gameOver = true;
 
-        // Calculate Total Time Spent Running
         runEndTime = Time.time;
         timeDelta = runEndTime - runStartTime;
 
-
-        // Show Total Time Spent Running On Center Timer
         string totalTime = FormatTime(timeDelta);
-        timerDisplayCenter.text = totalTime;
+        timerDisplayCenter.text = "Time: " + totalTime;
         timerDisplayCenter.gameObject.SetActive(true);
-
-        // Hide Corner Timer
         timerDisplayCorner.gameObject.SetActive(false);
+
+        Debug.Log("🕒 Game Over! Displaying final time: " + totalTime);
     }
 
     public static string FormatTime(float totalSeconds)

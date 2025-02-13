@@ -6,6 +6,7 @@ public class MusicManager : MonoBehaviour
     public GameObject rhythmsound;      // Assign the rhythmsound GameObject in Inspector
     public GameObject successCanvas;    // Assign the Success Canvas
     public AudioSource gameMusic;       // Assign the AudioSource that plays the music
+    public UIManager uiManager;         // Reference to UIManager
 
     [Header("Player Components")]
     public HatController hatController; // Assign the HatController directly
@@ -15,30 +16,24 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         // Hide Success Canvas at start
-        if (successCanvas != null)
-            successCanvas.SetActive(false);
+        if (successCanvas != null) successCanvas.SetActive(false);
+    }
 
-        // **Check if the Audio Source is assigned**
+    public void StartMusic()
+    {
+        // Enable Audio Source and Play Music
         if (gameMusic != null)
         {
-            if (!gameMusic.gameObject.activeSelf)  
-            {
-                gameMusic.gameObject.SetActive(true);  // Enable the Audio Source GameObject
-            }
-
             gameMusic.Play();
-            if (gameMusic.clip != null)  // **Ensure there's a valid audio clip**
+
+            if (gameMusic.clip != null)
             {
-                Invoke("CheckForMusicEnd", gameMusic.clip.length); // Schedule success trigger
+                Invoke(nameof(CheckForMusicEnd), gameMusic.clip.length); // Call when music ends
             }
             else
             {
                 Debug.LogWarning("⚠ gameMusic has no audio clip assigned!");
             }
-        }
-        else
-        {
-            Debug.LogWarning("⚠ No AudioSource assigned for game music!");
         }
     }
 
@@ -52,15 +47,15 @@ public class MusicManager : MonoBehaviour
 
     public void TriggerSuccess()
     {
-        if (isSuccessTriggered) return; // Prevent multiple triggers
+        if (isSuccessTriggered) return;
         isSuccessTriggered = true;
 
-        Debug.Log("🎉 Music Ended! Triggering Success...");
+        Debug.Log("🎉 Music Ended! Showing Success UI...");
 
-        // **Disable Player Movement**
+        // Disable Player Movement
         if (hatController != null)
         {
-            hatController.enabled = false; // Disable movement
+            hatController.enabled = false;
             Debug.Log("🚫 HatController disabled. Player movement stopped.");
         }
         else
@@ -68,7 +63,7 @@ public class MusicManager : MonoBehaviour
             Debug.LogWarning("⚠ No HatController script assigned!");
         }
 
-        // **Show Success UI**
+        // Show Success UI
         if (successCanvas != null)
         {
             successCanvas.SetActive(true);
@@ -77,6 +72,17 @@ public class MusicManager : MonoBehaviour
         else
         {
             Debug.LogError("⚠ Success Canvas is NOT assigned in the Inspector!");
+        }
+
+        // **Trigger GameOver in UIManager**
+        if (uiManager != null)
+        {
+            uiManager.GameOver();
+            Debug.Log("🕒 UIManager triggered GameOver Timer.");
+        }
+        else
+        {
+            Debug.LogWarning("⚠ UIManager is missing! GameOver UI might not work.");
         }
     }
 }

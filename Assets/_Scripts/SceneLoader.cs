@@ -1,24 +1,19 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+public class GameSceneReloader : MonoBehaviour
 {
-    private string[] scenePaths;
-
-    void Start()
+    void Update()
     {
-        scenePaths = new string[] { "ObstacleScene", "GaryOh", "TargetScene"};
-        Scene scene = SceneManager.GetActiveScene();
-        if (scene.name == "InitialScene") {
-            string hash = Application.absoluteURL.Split('#')[1];
-            LoadScene(hash);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadScene();
         }
     }
-    public void LoadScene(string msg) 
+
+    void ReloadScene()
     {
-        int i = int.Parse(msg) - 1;;
-        string sceneName = scenePaths[i];
-        SceneManager.LoadScene(sceneName);
+        Debug.Log("🔄 Reloading Scene: " + SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

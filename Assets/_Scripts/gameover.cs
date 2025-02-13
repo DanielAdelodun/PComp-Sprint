@@ -12,20 +12,12 @@ public class GameOverManager : MonoBehaviour
     public AudioSource gameMusic;       // Assign the AudioSource that plays the music
 
     private bool isGameOver = false;
-    private SceneReloader sceneReloader;
 
     void Start()
     {
         // Hide Game Over UI at the start
         if (gameOverCanvas != null)
             gameOverCanvas.SetActive(false);
-
-        // Find SceneReloader in the scene
-        sceneReloader = FindObjectOfType<SceneReloader>();
-        if (sceneReloader == null)
-        {
-            Debug.LogError("⚠ SceneReloader script is missing! Make sure it is attached to an active GameObject.");
-        }
     }
 
     public void TriggerGameOver()
@@ -55,15 +47,5 @@ public class GameOverManager : MonoBehaviour
 
         // **Show Game Over screen**
         if (gameOverCanvas != null) gameOverCanvas.SetActive(true);
-
-        // **Enable Scene Reload**
-        if (sceneReloader != null)
-        {
-            sceneReloader.EnableReload();
-        }
-        else
-        {
-            Debug.LogError("⚠ SceneReloader not found. Restart will not work!");
-        }
     }
 }
